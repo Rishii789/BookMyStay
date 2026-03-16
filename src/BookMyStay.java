@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 abstract class Room {
     String type;
     int beds;
@@ -16,7 +18,7 @@ abstract class Room {
         System.out.println("Beds: " + beds);
         System.out.println("Size: " + size + " sqft");
         System.out.println("Price per night: " + price);
-        System.out.println("Available: " + availability);
+        System.out.println("Available Rooms: " + availability);
         System.out.println();
     }
 }
@@ -39,21 +41,38 @@ class SuiteRoom extends Room {
     }
 }
 
+class RoomInventory {
+    HashMap<String, Integer> inventory;
+
+    RoomInventory() {
+        inventory = new HashMap<>();
+        inventory.put("Single Room", 5);
+        inventory.put("Double Room", 3);
+        inventory.put("Suite Room", 2);
+    }
+
+    int getAvailability(String roomType) {
+        return inventory.get(roomType);
+    }
+
+    void updateAvailability(String roomType, int count) {
+        inventory.put(roomType, count);
+    }
+}
+
 public class BookMyStay {
     public static void main(String[] args) {
-        System.out.println("Hotel Room Initialization");
+        System.out.println("Hotel Room Inventory Status");
         System.out.println();
+
+        RoomInventory inventory = new RoomInventory();
 
         Room single = new SingleRoom();
         Room doub = new DoubleRoom();
         Room suite = new SuiteRoom();
 
-        int singleAvailability = 5;
-        int doubleAvailability = 3;
-        int suiteAvailability = 2;
-
-        single.displayRoom(singleAvailability);
-        doub.displayRoom(doubleAvailability);
-        suite.displayRoom(suiteAvailability);
+        single.displayRoom(inventory.getAvailability("Single Room"));
+        doub.displayRoom(inventory.getAvailability("Double Room"));
+        suite.displayRoom(inventory.getAvailability("Suite Room"));
     }
 }
