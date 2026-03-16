@@ -21,6 +21,10 @@ abstract class Room {
         System.out.println("Available Rooms: " + availability);
         System.out.println();
     }
+
+    String getType() {
+        return type;
+    }
 }
 
 class SingleRoom extends Room {
@@ -54,25 +58,38 @@ class RoomInventory {
     int getAvailability(String roomType) {
         return inventory.get(roomType);
     }
+}
 
-    void updateAvailability(String roomType, int count) {
-        inventory.put(roomType, count);
+class RoomSearchService {
+    RoomInventory inventory;
+
+    RoomSearchService(RoomInventory inventory) {
+        this.inventory = inventory;
+    }
+
+    void searchRooms(Room[] rooms) {
+        System.out.println("Available Rooms");
+        System.out.println();
+        for (Room room : rooms) {
+            int available = inventory.getAvailability(room.getType());
+            if (available > 0) {
+                room.displayRoom(available);
+            }
+        }
     }
 }
 
 public class BookMyStay {
     public static void main(String[] args) {
-        System.out.println("Hotel Room Inventory Status");
-        System.out.println();
-
         RoomInventory inventory = new RoomInventory();
 
-        Room single = new SingleRoom();
-        Room doub = new DoubleRoom();
-        Room suite = new SuiteRoom();
+        Room[] rooms = {
+                new SingleRoom(),
+                new DoubleRoom(),
+                new SuiteRoom()
+        };
 
-        single.displayRoom(inventory.getAvailability("Single Room"));
-        doub.displayRoom(inventory.getAvailability("Double Room"));
-        suite.displayRoom(inventory.getAvailability("Suite Room"));
+        RoomSearchService searchService = new RoomSearchService(inventory);
+        searchService.searchRooms(rooms);
     }
 }
